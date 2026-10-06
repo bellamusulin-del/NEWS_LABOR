@@ -1,0 +1,7 @@
+{
+  "source": "Punctul.ro RSS Feed",
+  "url": "https://punctul.ro/feed/",
+  "type": "rss",
+  "language": "ro",
+  "description": "Local news feed used by the JavaRSS parser."
+}
