@@ -10,7 +10,7 @@ public class DatabaseHelper {
     private static final String DATABASE_URL =
             "jdbc:sqlite:newsapp.db";
 
-    // Kapcsolat megnyitasa adatbazissal
+    // Open a connection to the database
     public static Connection getConnection() throws SQLException {
         Connection connection =
                 DriverManager.getConnection(DATABASE_URL);
@@ -18,21 +18,23 @@ public class DatabaseHelper {
         return connection;
     }
 
-    // news letrehozasa
+    // Create the news table (composite primary key: source + url)
     public static void createTables() {
 
         String createNewsTableSql =
                 "CREATE TABLE IF NOT EXISTS news("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "title TEXT,"
-                + "description TEXT NOT NULL,"
-                + "source_or_author TEXT,"
-                + "publication_date TEXT,"
+                + "title TEXT NOT NULL,"
+                + "description TEXT,"
+                + "source TEXT NOT NULL,"
+                + "author TEXT,"
                 + "publisher TEXT,"
-                + "created_at TEXT NOT NULL,"
-                + "updated_at TEXT NOT NULL,"
+                + "publish_date TIMESTAMP,"
+                + "url TEXT NOT NULL,"
+                + "creation_date TIMESTAMP NOT NULL,"
+                + "last_modified_date TIMESTAMP NOT NULL,"
+                + "language TEXT NOT NULL,"
                 + "cover_image TEXT,"
-                + "link TEXT UNIQUE"
+                + "PRIMARY KEY (source, url)"
                 + ")";
 
         try {
