@@ -2,6 +2,7 @@ package com.rssreader;
 
 import com.modellek.News;
 import com.network.HttpHelper;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
@@ -12,6 +13,7 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import org.jdom2.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -182,17 +184,20 @@ public class RssReader {
                     title = entry.getTitle();
                 }
 
+                // Keep the raw description (with HTML), because the image
+                // can be inside it as an <img> tag
                 String description = "";
+                String rawDescription = "";
 
                 if (entry.getDescription() != null
                         && entry.getDescription().getValue() != null) {
 
-                    description =
+                    rawDescription =
                             entry.getDescription().getValue();
 
                     // Remove the HTML tags from the description
                     description =
-                            description.replaceAll("<[^>]*>", "").trim();
+                            rawDescription.replaceAll("<[^>]*>", "").trim();
                 }
 
                 String author = "";
@@ -211,6 +216,18 @@ public class RssReader {
                 Timestamp now =
                         new Timestamp(System.currentTimeMillis());
 
+                // Try to find the real image of this news
+                String coverImage =
+                        findImageUrl(entry, rawDescription);
+
+                // Test line: shows what image was found for each news
+                System.out.println("IMAGE: [" + coverImage + "] for " + title);
+
+                // Use the default image only if the feed has no image
+                if (coverImage.isEmpty()) {
+                    coverImage = DEFAULT_COVER_IMAGE;
+                }
+
                 News news =
                         new News(
                                 title,
@@ -223,7 +240,7 @@ public class RssReader {
                                 now,
                                 now,
                                 source.getLanguage(),
-                                DEFAULT_COVER_IMAGE
+                                coverImage
                         );
 
                 newsList.add(news);
@@ -239,4 +256,76 @@ public class RssReader {
 
         return newsList;
     }
+
+    // Try to find an image URL in one RSS entry.
+    // Returns an empty text if the entry has no image.
+    private String findImageUrl(SyndEntry entry, String rawDescription) {
+
+        // Place 1: the enclosure tag (many feeds put the image here)
+        List<SyndEnclosure> enclosureList =
+                entry.getEnclosures();
+
+        for (SyndEnclosure enclosure : enclosureList) {
+
+            String enclosureType =
+                    enclosure.getType();
+
+            String enclosureUrl =
+                    enclosure.getUrl();
+
+            boolean isImage =
+                    enclosureType != null
+                    && enclosureType.startsWith("image");
+
+            if (isImage && enclosureUrl != null && !enclosureUrl.isEmpty()) {
+                return enclosureUrl;
+            }
+        }
+
+        // Place 2: the media:content and media:thumbnail tags
+        List<Element> foreignMarkupList =
+                entry.getForeignMarkup();
+
+        for (Element markupElement : foreignMarkupList) {
+
+            String tagName =
+                    markupElement.getName();
+
+            if (tagName.equals("content") || tagName.equals("thumbnail")) {
+
+                String mediaUrl =
+                        markupElement.getAttributeValue("url");
+
+                if (mediaUrl != null && !mediaUrl.isEmpty()) {
+                    return mediaUrl;
+                }
+            }
+        }
+
+        // Place 3: the first <img src="..."> inside the description HTML
+        int imageTagStart =
+                rawDescription.indexOf("<img");
+
+        if (imageTagStart != -1) {
+
+            int sourceStart =
+                    rawDescription.indexOf("src=\"", imageTagStart);
+
+            if (sourceStart != -1) {
+
+                sourceStart = sourceStart + 5;
+
+                int sourceEnd =
+                        rawDescription.indexOf("\"", sourceStart);
+
+                if (sourceEnd != -1) {
+                    return rawDescription.substring(sourceStart, sourceEnd);
+                }
+            }
+        }
+
+        // No image found in this entry
+        return "";
+    }
 }
+      
