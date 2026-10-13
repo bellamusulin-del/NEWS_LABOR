@@ -1,3 +1,5 @@
+package com.modellek
+
 public class Event extends News {
 
     private String date;
