@@ -1,4 +1,4 @@
-package com.main;
+package com.ui;
 
 import com.adatbazis.DatabaseHelper;
 import com.ui.MainWindow;
