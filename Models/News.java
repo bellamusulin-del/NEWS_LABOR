@@ -1,90 +1,134 @@
-<?xml version="1.0" encoding="UTF-8"?>
+package com.modellek;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+import java.sql.Timestamp;
 
-    <modelVersion>4.0.0</modelVersion>
+public class News {
 
-    <groupId>com.example</groupId>
-    <artifactId>JavaRSS</artifactId>
-    <version>1.0.0</version>
-    <packaging>jar</packaging>
+    private String title;
+    private String description;
+    private String source;
+    private String author;
+    private String publisher;
+    private Timestamp publishDate;
+    private String url;
+    private Timestamp creationDate;
+    private Timestamp lastModifiedDate;
+    private String language;
+    private String coverImage;
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>5.10.2</junit.jupiter.version>
-    </properties>
+    public News() {
+    }
 
-    <dependencies>
+    public News(String title, String description, String source,
+                String author, String publisher, Timestamp publishDate,
+                String url, Timestamp creationDate,
+                Timestamp lastModifiedDate, String language,
+                String coverImage) {
 
-      <!--teszteleshez--> 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
+        this.title = title;
+        this.description = description;
+        this.source = source;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishDate = publishDate;
+        this.url = url;
+        this.creationDate = creationDate;
+        this.lastModifiedDate = lastModifiedDate;
+        this.language = language;
+        this.coverImage = coverImage;
+    }
 
-        <!--RSS-hez-->
-        <dependency>
-            <groupId>com.rometools</groupId>
-            <artifactId>rome</artifactId>
-            <version>2.1.0</version>
-        </dependency>
+    public String getTitle() {
+        return title;
+    }
 
-        <!--Json adat kezeles-->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20240303</version>
-        </dependency>
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-        <!--Gson-hoz-->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
-        </dependency>
+    public String getDescription() {
+        return description;
+    }
 
-        <!--adatbazishoz-->
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.45.1.0</version>
-        </dependency>
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    </dependencies>
+    public String getSource() {
+        return source;
+    }
 
-    <build>
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-        <plugins>
+    public String getAuthor() {
+        return author;
+    }
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-                <configuration>
-                    <release>17</release>
-                </configuration>
-            </plugin>
+    public String getPublisher() {
+        return publisher;
+    }
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-            </plugin>
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
-        </plugins>
+    public Timestamp getPublishDate() {
+        return publishDate;
+    }
 
-    </build>
+    public void setPublishDate(Timestamp publishDate) {
+        this.publishDate = publishDate;
+    }
 
-</project>
+    public String getUrl() {
+        return url;
+    }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    // The JList shows this text for every news item
+    @Override
+    public String toString() {
+        return title;
     }
 }
